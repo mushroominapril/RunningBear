@@ -14,7 +14,7 @@ int main()
                 window.close();
             }
         }
-
+        // test
         window.clear();
         window.display();
     }
