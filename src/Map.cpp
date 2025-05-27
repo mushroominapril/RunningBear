@@ -1,34 +1,42 @@
 #include "Map.h"
 #include<SFML/Graphics.hpp>
-Map::Map(const std::string texturePath, const std::string texturePath1, const sf::Vector2f& startPosition) :
-	m_texture1(texturePath), windowsize(startPosition), m_texture2(texturePath1), sprite1(m_texture1),
-	sprite2(m_texture2) {
-
+#include "Bear.h"
+Map::Map(const std::string texturePath, float flowFactor):m_texture(texturePath),sprite(m_texture),followFactor(flowFactor){
+	if (!m_texture.loadFromFile(texturePath)) {
+		throw std::runtime_error("Failed to load background texture: " + texturePath);
+	}
+   sprite.setTexture(m_texture);
 }
 
 void Map::draw(sf::RenderWindow& window) const
 {
-	window.draw(sprite1);
-	window.draw(sprite2);
+	window.draw(sprite);
 }
 
-void Map::update(float time, const sf::Vector2f& cameraMovement)
+void Map::update(const sf::Vector2f& targetPosition,float time)
 {
-	offset = scrollspread * time;
-	if (offset >= windowsize.x) {
-		offset = 0;
-	}
-	sprite1.setPosition({ -offset, 0 });
-	sprite2.setPosition({ windowsize.x - offset,0 });
+	sf::Vector2f targetOffset(
+		-targetPosition.x *followFactor,
+		-targetPosition.y *followFactor
+	);
+
+	// 平滑过渡（可选）
+	sf::Vector2f currentPos = sprite.getPosition();
+	sf::Vector2f newPos = currentPos + (targetOffset - currentPos) * 10.f * time;
+    sprite.setPosition(newPos);
 }
 
-void Map::setScrollSpread(float scrollspead)
+void Map::setFollowFactor(float factor)
 {
-	this->scrollspread = scrollspead;
+	followFactor = std::clamp(factor, 0.f, 1.f);//clamp函数将数值限定在指定范围内，防止穿帮
 }
 
-void Map::setReapeting(bool repeat)
+float Map::getFollowFactor() const
 {
-	m_texture1.setRepeated(repeat);
+	return followFactor;
 }
+
+
+
+
 
