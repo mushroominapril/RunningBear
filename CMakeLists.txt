@@ -12,6 +12,10 @@ FetchContent_Declare(SFML
     SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
+<<<<<<< HEAD
 add_executable(main src/main.cpp "src/Bear.h" "src/Bear.cpp" "src/Map.cpp" "src/Obstacle.cpp")
+=======
+add_executable(main src/main.cpp "src/Bear.h" "src/Bear.cpp" "src/Map.cpp" "src/Glod.cpp" "src/Glod.h")
+>>>>>>> b4f489937b84bc2bdd8efc6a7e94fa112aed05d6
 target_compile_features(main PRIVATE cxx_std_17)
 target_link_libraries(main PRIVATE SFML::Graphics)

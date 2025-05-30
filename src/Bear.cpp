@@ -1,18 +1,39 @@
 #include "Bear.h"
 #include<iostream>
 #include<fstream>
-Bear::Bear(const std::string& texturePath, const sf::Vector2f& startPosition):texture(texturePath),sprite(texture),
+Bear::Bear(const std::string& texturePath, const std::string& texturePath1, const std::string& texturePath2,
+    const std::string& texturePath3,const std::string& texturePath4,
+    const sf::Vector2f& startPosition):texture(texturePath), sprite(texture),
 	moveSpeed(0.f),verticalVelocity(0.f),isOnGround(false)//Sprite不存在无参的构造函数
 {
-	if (!texture.loadFromFile(texturePath)) {
-		std::cerr << "Failed to load texture: " << texturePath << std::endl;
-		throw std::runtime_error("Failed to load texture");
-	} 
+    if (!texture.loadFromFile(texturePath) ||
+        ! texture1.loadFromFile(texturePath1) ||
+        !texture2.loadFromFile(texturePath2) ||
+        !texture3.loadFromFile(texturePath3) ||
+        !texture4.loadFromFile(texturePath4))
+    {
+        std::cerr << "Failed to load player textures!" << std::endl;
+    }
+    textures.push_back(&texture);
+    textures.push_back(&texture1);
+    textures.push_back(&texture2);
+    textures.push_back(&texture3);
+    textures.push_back(&texture4);
 	sprite.setPosition(startPosition);
+    sprite.setTexture(*textures[currentTextureIndex]);
+    textureSwithTime = 0.3f;
+    pastTime = 0.0f;
 }
 //控制移动的函数
 void Bear::update(float time)
 {
+    pastTime += time;
+    if (pastTime >= textureSwithTime) {
+        currentTextureIndex = (currentTextureIndex + 1) % textures.size();
+        sprite.setTexture(*textures[currentTextureIndex]);
+        pastTime = 0.0f;
+    }
+
     // 水平输入
     float direction = 0.f;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) direction -= 1.f;
