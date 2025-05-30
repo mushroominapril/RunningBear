@@ -3,6 +3,7 @@
 #include<iostream>
 #include"Bear.h"
 #include"Map.h"
+
 int main()
 {
     sf::RenderWindow window(sf::VideoMode({ 800,600 }), "My",sf::State::Windowed);
