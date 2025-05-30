@@ -6,11 +6,8 @@
 #include<iostream>
 #include"Bear.h"
 #include"Map.h"
-<<<<<<< HEAD
-
-=======
 #include"Glod.h"
->>>>>>> b4f489937b84bc2bdd8efc6a7e94fa112aed05d6
+
 int main()
 {
     sf::RenderWindow window(sf::VideoMode({ 800,600 }), "My",sf::State::Windowed);
