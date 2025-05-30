@@ -9,6 +9,7 @@ Glod::Glod(const std::string& texturePath, const sf::Vector2f& position) :textur
 	float y = rand() % static_cast<int>(height);*/
 	sprite.setPosition(position);
 	sprite.setScale({0.5f, 0.5f});
+	
 	/*sprite.setTexture(texture);*/
 }
 
