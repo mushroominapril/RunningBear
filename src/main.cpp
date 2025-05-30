@@ -19,8 +19,8 @@ int main()
         Bear bear("sprite_01.png", "sprite_02.png", "sprite_03.png", "sprite_04.png", "sprite_05.png", { 400, 300 });
         Map map("map1.png", 0.5f);
 
-        Glod glod1("glod.png", {500,400});
-        Glod glod2("glod.png", { 500, 600});
+        Glod glod1("glod.png", {100,100});
+        Glod glod2("glod.png", { 100, 100});
 
         std::vector<Glod>glods;
         glods.push_back(glod1);
@@ -44,19 +44,15 @@ int main()
                     window.close();
                 }
             }
-
-            bear.update(time);
-
-            map.update(bear.getPosition(), time);
+     /*       bear.update(time);
+      
+            map.update(bear.getPosition(), time);*/
             window.clear();
-            map.draw(window);
+
             glod1.draw(window);
-            //// 调试：绘制红色矩形代替金币
-            //sf::RectangleShape debugRect(sf::Vector2f(20, 20));
-            //debugRect.setFillColor(sf::Color::Red);
-            //debugRect.setPosition(glod1.getPosition());
-            //window.draw(debugRect);
-            bear.draw(window);
+          /*  map.draw(window);
+           
+            bear.draw(window);*/
             window.display();
         }
     }
