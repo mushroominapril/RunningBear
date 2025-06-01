@@ -7,55 +7,65 @@
 #include"Bear.h"
 #include"Map.h"
 #include"Glod.h"
+#include"Obstacle.h"
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode({ 800,600 }), "My",sf::State::Windowed);
-    window.setTitle("SFML WIndow");
-    try {
-        Bear bear("sprite_01.png", "sprite_02.png", "sprite_03.png", "sprite_04.png", "sprite_05.png", { 400, 300 });
-        Map map("map1.png", 0.5f);
+	sf::RenderWindow window(sf::VideoMode({ 800,600 }), "My", sf::State::Windowed);
+	window.setTitle("SFML WIndow");
+	try {
+		Bear bear("sprite_01.png", "sprite_02.png", "sprite_03.png", "sprite_04.png", "sprite_05.png", { 400, 300 });
+		Map map("map1.png", 0.5f);
 
-        Glod glod1("glod.png", {100,100});
-        Glod glod2("glod.png", { 100, 100});
+		Glod glod1("glod.png", { 100,100 });
+		Glod glod2("glod.png", { 100, 100 });
 
-        std::vector<Glod>glods;
-        glods.push_back(glod1);
-        glods.push_back(glod2);
-   
-        sf::Clock clock;
- /*       sf::Music backgroundMusic;
-        if (!backgroundMusic.openFromFile("background_music.ogg")) {
-            std::cerr << "Failed to load background music!" << std::endl;
-            return -1;
-        }  
-        backgroundMusic.setLooping(true);
-        backgroundMusic.play();*/
-    
-        while (window.isOpen()) {
-            //std::optional包装的时间对象,返回值存储在evet常量中
-            //pollEvent用于检查并获取窗口的事件队列中的下一个事件
-            float time = clock.restart().asSeconds();
-            while (const std::optional event = window.pollEvent()) {
-                if (event->is<sf::Event::Closed>()) {
-                    window.close();
-                }
-            }
-     /*       bear.update(time);
-      
-            map.update(bear.getPosition(), time);*/
-            window.clear();
+		std::vector<Glod>glods;
+		glods.push_back(glod1);
+		glods.push_back(glod2);
 
-            glod1.draw(window);
-          /*  map.draw(window);
-           
-            bear.draw(window);*/
-            window.display();
-        }
-    }
-    catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what() << std::endl;
-        return -1;
-    }
-    return 0;
+		/*ObstacleManager obstacleManager;
+		if (!obstacleManager.loadTextures()) { return -1; }*/
+
+		sf::Clock clock;
+		/*       sf::Music backgroundMusic;
+			   if (!backgroundMusic.openFromFile("background_music.ogg")) {
+				   std::cerr << "Failed to load background music!" << std::endl;
+				   return -1;
+			   }
+			   backgroundMusic.setLooping(true);
+			   backgroundMusic.play();*/
+
+		while (window.isOpen()) {
+			//std::optional包装的时间对象,返回值存储在evet常量中
+			//pollEvent用于检查并获取窗口的事件队列中的下一个事件
+			float time = clock.restart().asSeconds();
+			while (const std::optional event = window.pollEvent()) {
+				if (event->is<sf::Event::Closed>()) {
+					window.close();
+				}
+			}
+			bear.update(time);
+			map.update(bear.getPosition(), time);
+
+			/*float bearWidth = bear.getBounds().size.x;
+			obstacleManager.update(time, 200.0f, bearWidth);
+
+			if (obstacleManager.checkCollision(bear.getBounds())) {
+				std::cout << "si!" << std::endl;
+			}*/
+
+			window.clear();
+			map.draw(window);
+			bear.draw(window);
+			glod1.draw(window);
+			/*obstacleManager.draw(window);*/
+			window.display();
+		}
+	}
+	catch (const std::exception& e) {
+		std::cerr << "Error: " << e.what() << std::endl;
+		return -1;
+	}
+	return 0;
 }

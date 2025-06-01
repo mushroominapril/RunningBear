@@ -96,3 +96,6 @@ sf::Vector2f Bear::getPosition() const
     return sprite.getPosition();
 }
 
+sf::FloatRect Bear::getBounds() const {
+    return sprite.getGlobalBounds();
+}

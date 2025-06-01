@@ -30,5 +30,5 @@ public:
 	void draw(sf::RenderWindow& window);
 	void setPosition(const sf::Vector2f& Position);
 	sf::Vector2f getPosition() const;
-	
+	sf::FloatRect getBounds() const;
 };

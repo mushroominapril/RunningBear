@@ -1,72 +1,23 @@
 #include "Obstacle.h"
+#include "Tool.h"
 #include <random>
 #include <iostream>
 
-// Obstacle 类实现
+// Obstacle 基类实现
 
-Obstacle::Obstacle(sf::Texture& texture, float posX, float posY, ObstacleType type)
-	: sprite(texture), type(type), animationTime(0), animationDirection(true) {
+Obstacle::Obstacle(sf::Texture& texture, float posX, float posY, float targetWidth)
+	: sprite(texture), animationTime(0.0f), animationSpeed(0.0f) {
 	auto size = sprite.getTexture().getSize();
-	sprite.setPosition({ posX, posY - static_cast<float>(size.y) });
-	switch (type) {
-	case ObstacleType::Balloon:
-		animationSpeed = 2.0f;
-		break;
-	case ObstacleType::LongBlock:
-		animationSpeed = 0.5f;
-		break;
-	default:
-		animationSpeed = 0.0f;
-	}
-	switch (type) {
-	case ObstacleType::SmallBlock:
-		sprite.setScale({ 0.7f, 0.7f });
-		break;
-	case ObstacleType::MediumBlock:
-		sprite.setScale({ 1.0f, 1.0f });
-		break;
-	case ObstacleType::LargeBlock:
-		sprite.setScale({ 1.3f, 1.3f });
-		break;
-	case ObstacleType::LongBlock:
-		sprite.setScale({ 2.0f, 1.0f });
-		break;
-	default:
-		break;
-	}
+	float scaleX = targetWidth / size.x;
+	float scaleY = scaleX;
+	sprite.setScale({ scaleX, scaleY });
+	float scaledHeight = size.y * scaleY;
+	sprite.setPosition({ posX, posY - scaledHeight });
 }
 
 void Obstacle::update(float deltaTime, float speed) {
 	sprite.move({ -speed * deltaTime, 0 });
 	updateAnimation(deltaTime);
-}
-
-void Obstacle::updateAnimation(float deltaTime) {
-	if (animationSpeed <= 0.0f) return;
-	animationTime += deltaTime;
-
-	switch (type) {
-	case ObstacleType::Balloon: {
-		float offset = std::sin(animationTime * animationSpeed * 5.0f) * 10.0f;
-		auto pos = sprite.getPosition();
-		sprite.setPosition({ pos.x, pos.y + offset * deltaTime * 60.0f });
-		break;
-	}
-	case ObstacleType::LongBlock: {
-		float angle = std::sin(animationTime * animationSpeed) * 2.0f;
-		sprite.setRotation(sf::degrees(angle));
-		break;
-	}
-	default:
-		if (type == ObstacleType::SmallBlock ||
-			type == ObstacleType::MediumBlock ||
-			type == ObstacleType::LargeBlock) {
-			float scaleOffset = std::sin(animationTime * animationSpeed) * 0.05f;
-			sf::Vector2f baseScale = sprite.getScale();
-			sprite.setScale({ baseScale.x * (1.0f + scaleOffset), baseScale.y * (1.0f + scaleOffset) });
-		}
-		break;
-	}
 }
 
 bool Obstacle::isOffScreen() const {
@@ -83,6 +34,61 @@ void Obstacle::draw(sf::RenderWindow& window) {
 }
 
 
+// ============ SmallBlock实现 ============
+SmallBlock::SmallBlock(sf::Texture& texture, float posX, float posY, float targetWidth)
+	: Obstacle(texture, posX, posY, targetWidth) {
+	animationSpeed = 1.2f;
+}
+
+void SmallBlock::updateAnimation(float deltaTime) {
+	if (animationSpeed <= 0.0f) return;
+	animationTime += deltaTime;
+	float scaleOffset = std::sin(animationTime * animationSpeed) * 0.05f;
+	sprite.setScale({ 1.0f + scaleOffset, 1.0f + scaleOffset });
+}
+
+// ============ BigBlock实现 ============
+BigBlock::BigBlock(sf::Texture& texture, float posX, float posY, float targetWidth)
+	: Obstacle(texture, posX, posY, targetWidth) {
+	animationSpeed = 0.8f;
+}
+
+void BigBlock::updateAnimation(float deltaTime) {
+	if (animationSpeed <= 0.0f) return;
+	animationTime += deltaTime;
+	float scaleOffset = std::cos(animationTime * animationSpeed) * 0.08f;
+	sprite.setScale({ 1.0f + scaleOffset, 1.0f + scaleOffset });
+	float angle = std::sin(animationTime * 0.3f) * 1.0f;
+	sprite.setRotation(sf::degrees(angle));
+}
+
+// ============ LongBlock实现 ============
+LongBlock::LongBlock(sf::Texture& texture, float posX, float posY, float targetWidth)
+	: Obstacle(texture, posX, posY, targetWidth) {
+	animationSpeed = 0.5f;
+}
+
+void LongBlock::updateAnimation(float deltaTime) {
+	if (animationSpeed <= 0.0f) return;
+	animationTime += deltaTime;
+	float angle = std::sin(animationTime * animationSpeed) * 2.0f;
+	sprite.setRotation(sf::degrees(angle));
+}
+
+// ============ Balloon实现 ============
+Balloon::Balloon(sf::Texture& texture, float posX, float posY, float targetWidth)
+	: Obstacle(texture, posX, posY, targetWidth) {
+	animationSpeed = 2.0f;
+}
+
+void Balloon::updateAnimation(float deltaTime) {
+	if (animationSpeed <= 0.0f) return;
+	animationTime += deltaTime;
+	float offset = std::sin(animationTime * animationSpeed * 5.0f) * 10.0f;
+	auto pos = sprite.getPosition();
+	sprite.setPosition({ pos.x, pos.y + offset * deltaTime * 60.0f });
+}
+
 // ObstacleManager 类实现
 
 ObstacleManager::ObstacleManager()
@@ -92,36 +98,31 @@ ObstacleManager::ObstacleManager()
 }
 
 bool ObstacleManager::loadTextures() {
-	if (!blockTexture.loadFromFile("assets/small_cactus.png")) {
-		std::cerr << "无法加载路障纹理！" << std::endl;
+	if (!smallBlockTexture.loadFromFile("smallBlock.png")) {
+		std::cerr << "无法加载小路障纹理！" << std::endl;
 		return false;
 	}
-	if (!blockTexture.loadFromFile("assets/medium_cactus.png")) {
-		std::cerr << "无法加载路障纹理！" << std::endl;
+	if (!bigBlockTexture.loadFromFile("bigBlock.png")) {
+		std::cerr << "无法加载大路障纹理！" << std::endl;
 		return false;
 	}
-	if (!blockTexture.loadFromFile("assets/large_cactus.png")) {
-		std::cerr << "无法加载路障纹理！" << std::endl;
-		return false;
-	}
-	if (!balloonTexture.loadFromFile("assets/bird.png")) {
-		std::cerr << "无法加载广告气球纹理！" << std::endl;
-		return false;
-	}
-	if (!longBlockTexture.loadFromFile("assets/long_obstacle.png")) {
+	if (!longBlockTexture.loadFromFile("longBlock.png")) {
 		std::cerr << "无法加载长路障纹理！" << std::endl;
+		return false;
+	}
+	if (!balloonTexture.loadFromFile("balloon.png")) {
+		std::cerr << "无法加载广告气球纹理！" << std::endl;
 		return false;
 	}
 	return true;
 }
 
-//
-void ObstacleManager::update(float deltaTime, float speed) {
+void ObstacleManager::update(float deltaTime, float speed, float targetWidth) {
 	spawnTimer += deltaTime;
 
 	if (spawnTimer >= nextSpawnTime &&
 		(obstacles.empty() || 800.0f - lastObstacleX >= minObstacleDistance)) {
-		spawnObstacle(450.0f);
+		spawnObstacle(450.0f, targetWidth);
 		spawnTimer = 0;
 		nextSpawnTime = getRandomSpawnTime();
 	}
@@ -137,66 +138,39 @@ void ObstacleManager::update(float deltaTime, float speed) {
 	);
 }
 
-void ObstacleManager::spawnObstacle(float groundY) {
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	ObstacleType type = getRandomObstacleType();
 
-	sf::Texture* texture = nullptr;
-	switch (type) {
-	case ObstacleType::SmallBlock:
-		texture = &blockTexture;
-		break;
-	case ObstacleType::MediumBlock:
-		texture = &blockTexture;
-		break;
-	case ObstacleType::LargeBlock:
-		texture = &blockTexture;
-		break;
-	case ObstacleType::Balloon:
-		texture = &balloonTexture;
-		break;
-	case ObstacleType::LongBlock:
-		texture = &longBlockTexture;
-		break;
-	}
-	if (!texture) return;
-
+void ObstacleManager::spawnObstacle(float groundY, float targetWidth) {
+	int typeIndex = getRandomObstacleType();
 	float posY = groundY;
-	if (type == ObstacleType::Balloon) {
-		std::uniform_real_distribution<float> height(groundY - 200.0f, groundY - 100.0f);
-		posY = height(gen);
+	std::unique_ptr<Obstacle> obstacle;
+
+	switch (typeIndex) {
+	case 0: // SmallBlock
+		obstacle = std::make_unique<SmallBlock>(smallBlockTexture, 800.0f, posY, targetWidth);
+		break;
+	case 1: // BigBlock
+		obstacle = std::make_unique<BigBlock>(bigBlockTexture, 800.0f, posY, targetWidth);
+		break;
+	case 2: // LongBlock
+		obstacle = std::make_unique<LongBlock>(longBlockTexture, 800.0f, posY, targetWidth);
+		break;
+	case 3: // Balloon
+		posY = Tool::getRandomFloat(groundY - 200.0f, groundY - 100.0f);
+		obstacle = std::make_unique<Balloon>(balloonTexture, 800.0f, posY, targetWidth);
+		break;
 	}
 
-	obstacles.push_back(std::make_unique<Obstacle>(*texture, 800.0f, posY, type));
+	obstacles.push_back(std::move(obstacle));
 	lastObstacleX = 800.0f;
 }
 
-ObstacleType ObstacleManager::getRandomObstacleType() const {
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	std::uniform_int_distribution<> typeDis(0, 4);
-
-	switch (typeDis(gen)) {
-	case 0: return ObstacleType::SmallBlock;
-	case 1: return ObstacleType::MediumBlock;
-	case 2: return ObstacleType::LargeBlock;
-	case 3: return ObstacleType::Balloon;
-	case 4: return ObstacleType::LongBlock;
-	default: return ObstacleType::MediumBlock;
-	}
+int ObstacleManager::getRandomObstacleType() const {
+	return Tool::getRandomInt(0, 3);
 }
 
 bool ObstacleManager::checkCollision(const sf::FloatRect& playerBounds) {
 	for (const auto& obstacle : obstacles) {
-		sf::FloatRect obstacleBounds = obstacle->getBounds();
-
-		bool collision = !(playerBounds.position.x + playerBounds.size.x < obstacleBounds.position.x ||
-			obstacleBounds.position.x + obstacleBounds.size.x < playerBounds.position.x ||
-			playerBounds.position.y + playerBounds.size.y < obstacleBounds.position.y ||
-			obstacleBounds.position.y + obstacleBounds.size.y < playerBounds.position.y);
-
-		if (collision) {
+		if (Tool::checkCollision(playerBounds, obstacle->getBounds())) {
 			return true;
 		}
 	}
@@ -219,10 +193,7 @@ void ObstacleManager::reset() {
 }
 
 float ObstacleManager::getRandomSpawnTime() const {
-	std::random_device rd;
-	std::mt19937 gen(rd());
-	std::uniform_real_distribution<float> dis(1.5f, 3.0f); // 
-	return dis(gen);
+	return Tool::getRandomFloat(minSpawnTime, maxSpawnTime);
 }
 
 void ObstacleManager::increaseDifficulty(float gameTime) {

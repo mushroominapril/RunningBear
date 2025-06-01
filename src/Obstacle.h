@@ -1,87 +1,86 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <SFML/Graphics/Rect.hpp> 
 #include <vector>
 #include <memory>
-
-enum class ObstacleType {
-    SmallBlock,
-    MediumBlock,
-    LargeBlock,
-    Balloon,
-    LongBlock
-};
 
 // 障碍物类
 class Obstacle {
 public:
-	// 构造函数
-    Obstacle(sf::Texture& texture, float posX, float posY, ObstacleType type);
+	Obstacle(sf::Texture& texture, float posX, float posY, float targetWidth);
+	virtual ~Obstacle() = default;
 
-	// 更新障碍物的位置
-	void update(float deltaTime, float speed);
+	virtual void update(float deltaTime, float speed); // 更新障碍物的位置
+	virtual bool isOffScreen() const; // 检查障碍物是否已经移出屏幕
+	virtual sf::FloatRect getBounds() const; // 获取障碍物的碰撞边界
+	virtual void draw(sf::RenderWindow& window); // 绘制障碍物
 
-	// 检查障碍物是否已经移出屏幕
-	bool isOffScreen() const;
+protected:
+	virtual void updateAnimation(float deltaTime) = 0; // 更新动画效果
 
-	// 获取障碍物的碰撞边界
-	sf::FloatRect getBounds() const;
-
-	// 绘制障碍物
-	void draw(sf::RenderWindow& window);
-    ObstacleType getType() const { return type; }
-
-    // 更新动画效果
-    void updateAnimation(float deltaTime);
-private:
 	sf::Sprite sprite;
-    ObstacleType type;
-    float animationTime;
-    float animationSpeed;
-    bool animationDirection;
+	float animationTime;
+	float animationSpeed;
+};
+
+// 小障碍物
+class SmallBlock : public Obstacle {
+public:
+	SmallBlock(sf::Texture& texture, float posX, float posY, float targetWidth);
+protected:
+	void updateAnimation(float deltaTime) override;
+};
+
+// 大障碍物
+class BigBlock : public Obstacle {
+public:
+	BigBlock(sf::Texture& texture, float posX, float posY, float targetWidth);
+protected:
+	void updateAnimation(float deltaTime) override;
+};
+
+// 长障碍物
+class LongBlock : public Obstacle {
+public:
+	LongBlock(sf::Texture& texture, float posX, float posY, float targetWidth);
+protected:
+	void updateAnimation(float deltaTime) override;
+};
+
+// 气球障碍物
+class Balloon : public Obstacle {
+public:
+	Balloon(sf::Texture& texture, float posX, float posY, float targetWidth);
+protected:
+	void updateAnimation(float deltaTime) override;
 };
 
 // 障碍物管理器类
 class ObstacleManager {
 public:
-    // 构造函数
-    ObstacleManager();
+	ObstacleManager();
 
-    // 加载障碍物纹理
-    bool loadTextures();
-
-    // 更新所有障碍物
-    void update(float deltaTime, float speed);
-
-    // 生成新障碍物
-    void spawnObstacle(float groundY);
-
-    // 检测与玩家的碰撞
-    bool checkCollision(const sf::FloatRect& playerBounds);
-
-    // 绘制所有障碍物
-    void draw(sf::RenderWindow& window);
-
-    // 重置障碍物系统
-    void reset();
-
-    // 难度调整
-    void increaseDifficulty(float gameTime);
+	bool loadTextures(); // 加载障碍物纹理
+	void update(float deltaTime, float speed, float targetWidth); // 更新所有障碍物
+	bool checkCollision(const sf::FloatRect& playerBounds); // 检测与玩家的碰撞
+	void draw(sf::RenderWindow& window); // 绘制所有障碍物
+	void reset(); // 重置障碍物系统
+	void increaseDifficulty(float gameTime); // 难度调整
 
 private:
-    std::vector<std::unique_ptr<Obstacle>> obstacles; // 存储当前活跃的障碍物对象
-    sf::Texture blockTexture;
-    sf::Texture balloonTexture;
-    sf::Texture longBlockTexture;
+	void spawnObstacle(float groundY, float targetWidth); // 生成新障碍物
+	float getRandomSpawnTime() const; // 生成随机生成时间
+	int getRandomObstacleType() const; // 生成随机障碍物类型
 
-    float spawnTimer; // 生成计时器
-    float nextSpawnTime; // 下次生成时间
-    float minSpawnTime; // 最小生成时间间隔
-    float maxSpawnTime; // 最大生成时间间隔
-    float lastObstacleX; // 上一个障碍物的X坐标
-    float minObstacleDistance; // 障碍物之间的最小距离
+	std::vector<std::unique_ptr<Obstacle>> obstacles; // 存储当前活跃的障碍物对象
+	sf::Texture smallBlockTexture;
+	sf::Texture bigBlockTexture;
+	sf::Texture longBlockTexture;
+	sf::Texture balloonTexture;
 
-    // 生成随机生成时间
-    float getRandomSpawnTime() const;
-    ObstacleType getRandomObstacleType() const;
+	float spawnTimer; // 生成计时器
+	float nextSpawnTime; // 下次生成时间
+	float minSpawnTime; // 最小生成时间间隔
+	float maxSpawnTime; // 最大生成时间间隔
+	float lastObstacleX; // 上一个障碍物的X坐标
+	float minObstacleDistance; // 障碍物之间的最小距离
 };
