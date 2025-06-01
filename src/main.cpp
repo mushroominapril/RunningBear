@@ -7,7 +7,7 @@
 #include"Bear.h"
 #include"Map.h"
 #include"Glod.h"
-#include"Obstacle.h"
+//#include"Obstacle.h"
 
 int main()
 {
