@@ -7,7 +7,8 @@
 #include"Bear.h"
 #include"Map.h"
 #include"Glod.h"
-//#include"Obstacle.h"
+#include"GoldManager.h"
+#include"Obstacle.h"
 
 int main()
 {
@@ -16,16 +17,20 @@ int main()
 	try {
 		Bear bear("sprite_01.png", "sprite_02.png", "sprite_03.png", "sprite_04.png", "sprite_05.png", { 400, 300 });
 		Map map("map1.png", 0.5f);
+		// 初始化金币管理器
+		GoldManager goldManager;
+		if (!goldManager.loadTexture()) {
+			std::cerr << "Failed to load gold textures!" << std::endl;
+			return -1;
+		}
 
-		Glod glod1("glod.png", { 100,100 });
-		Glod glod2("glod.png", { 100, 100 });
+		// 游戏状态变量
+		int score = 0;//积分
+		const float groundY = 450.0f; // 地面Y坐标
+		const float gameSpeed = 200.0f; // 游戏基础速度
 
-		std::vector<Glod>glods;
-		glods.push_back(glod1);
-		glods.push_back(glod2);
-
-		/*ObstacleManager obstacleManager;
-		if (!obstacleManager.loadTextures()) { return -1; }*/
+		ObstacleManager obstacleManager;
+		if (!obstacleManager.loadTextures()) { return -1; }
 
 		sf::Clock clock;
 		/*       sf::Music backgroundMusic;
@@ -48,18 +53,29 @@ int main()
 			bear.update(time);
 			map.update(bear.getPosition(), time);
 
-			/*float bearWidth = bear.getBounds().size.x;
+			// 更新金币系统
+			float bearWidth = bear.getBounds().size. x;
+			goldManager.update(time, gameSpeed, groundY, bearWidth);
+
+			// 检查金币收集//此处实现计分
+			int collected = goldManager.checkCollection(bear.getBounds());
+			if (collected > 0) {
+				score += collected * 10;
+				/*scoreText.setString("Score: " + std::to_string(score));*/
+				std::cout << "Collected " << collected << " gold! Score: " << score << std::endl;
+			}
+
 			obstacleManager.update(time, 200.0f, bearWidth);
 
 			if (obstacleManager.checkCollision(bear.getBounds())) {
 				std::cout << "si!" << std::endl;
-			}*/
+			}
 
 			window.clear();
 			map.draw(window);
+			goldManager.draw(window);
 			bear.draw(window);
-			glod1.draw(window);
-			/*obstacleManager.draw(window);*/
+			obstacleManager.draw(window);
 			window.display();
 		}
 	}

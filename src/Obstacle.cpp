@@ -3,7 +3,7 @@
 #include <random>
 #include <iostream>
 
-// Obstacle »ùÀàÊµÏÖ
+// Obstacle ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½
 
 Obstacle::Obstacle(sf::Texture& texture, float posX, float posY, float targetWidth)
 	: sprite(texture), animationTime(0.0f), animationSpeed(0.0f) {
@@ -34,7 +34,7 @@ void Obstacle::draw(sf::RenderWindow& window) {
 }
 
 
-// ============ SmallBlockÊµÏÖ ============
+// ============ SmallBlockÊµï¿½ï¿½ ============
 SmallBlock::SmallBlock(sf::Texture& texture, float posX, float posY, float targetWidth)
 	: Obstacle(texture, posX, posY, targetWidth) {
 	animationSpeed = 1.2f;
@@ -47,7 +47,7 @@ void SmallBlock::updateAnimation(float deltaTime) {
 	sprite.setScale({ 1.0f + scaleOffset, 1.0f + scaleOffset });
 }
 
-// ============ BigBlockÊµÏÖ ============
+// ============ BigBlockÊµï¿½ï¿½ ============
 BigBlock::BigBlock(sf::Texture& texture, float posX, float posY, float targetWidth)
 	: Obstacle(texture, posX, posY, targetWidth) {
 	animationSpeed = 0.8f;
@@ -62,7 +62,7 @@ void BigBlock::updateAnimation(float deltaTime) {
 	sprite.setRotation(sf::degrees(angle));
 }
 
-// ============ LongBlockÊµÏÖ ============
+// ============ LongBlockÊµï¿½ï¿½ ============
 LongBlock::LongBlock(sf::Texture& texture, float posX, float posY, float targetWidth)
 	: Obstacle(texture, posX, posY, targetWidth) {
 	animationSpeed = 0.5f;
@@ -75,7 +75,7 @@ void LongBlock::updateAnimation(float deltaTime) {
 	sprite.setRotation(sf::degrees(angle));
 }
 
-// ============ BalloonÊµÏÖ ============
+// ============ BalloonÊµï¿½ï¿½ ============
 Balloon::Balloon(sf::Texture& texture, float posX, float posY, float targetWidth)
 	: Obstacle(texture, posX, posY, targetWidth) {
 	animationSpeed = 2.0f;
@@ -89,7 +89,7 @@ void Balloon::updateAnimation(float deltaTime) {
 	sprite.setPosition({ pos.x, pos.y + offset * deltaTime * 60.0f });
 }
 
-// ObstacleManager ÀàÊµÏÖ
+// ObstacleManager ï¿½ï¿½Êµï¿½ï¿½
 
 ObstacleManager::ObstacleManager()
 	:spawnTimer(0), nextSpawnTime(0), minSpawnTime(1.0f), maxSpawnTime(3.0f),
@@ -99,19 +99,19 @@ ObstacleManager::ObstacleManager()
 
 bool ObstacleManager::loadTextures() {
 	if (!smallBlockTexture.loadFromFile("smallBlock.png")) {
-		std::cerr << "ÎÞ·¨¼ÓÔØÐ¡Â·ÕÏÎÆÀí£¡" << std::endl;
+		std::cerr << "ï¿½Þ·ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" << std::endl;
 		return false;
 	}
 	if (!bigBlockTexture.loadFromFile("bigBlock.png")) {
-		std::cerr << "ÎÞ·¨¼ÓÔØ´óÂ·ÕÏÎÆÀí£¡" << std::endl;
+		std::cerr << "ï¿½Þ·ï¿½ï¿½ï¿½ï¿½Ø´ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" << std::endl;
 		return false;
 	}
 	if (!longBlockTexture.loadFromFile("longBlock.png")) {
-		std::cerr << "ÎÞ·¨¼ÓÔØ³¤Â·ÕÏÎÆÀí£¡" << std::endl;
+		std::cerr << "ï¿½Þ·ï¿½ï¿½ï¿½ï¿½Ø³ï¿½Â·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" << std::endl;
 		return false;
 	}
 	if (!balloonTexture.loadFromFile("balloon.png")) {
-		std::cerr << "ÎÞ·¨¼ÓÔØ¹ã¸æÆøÇòÎÆÀí£¡" << std::endl;
+		std::cerr << "ï¿½Þ·ï¿½ï¿½ï¿½ï¿½Ø¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" << std::endl;
 		return false;
 	}
 	return true;

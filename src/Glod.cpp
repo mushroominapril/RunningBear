@@ -1,39 +1,70 @@
-#include"Glod.h"
+#pragma once
+#include "Glod.h"
+#include "Tool.h"
+#include <random>
+#include <iostream>
 
-Glod::Glod(const std::string& texturePath, const sf::Vector2f& position) :texture(texturePath), sprite(texture) {
-	/*srand(static_cast<unsigned int>(time(0)));*/
-	if (!texture.loadFromFile(texturePath)) {
-		throw std::runtime_error("Failed to load coin texture: " + texturePath);
-	}
-	/*float x = rand() % static_cast<int>(width);
-	float y = rand() % static_cast<int>(height);*/
-	sprite.setPosition(position);
-	sprite.setScale({0.5f, 0.5f});
-	
-	/*sprite.setTexture(texture);*/
+// Glod 类实现
+Glod::Glod(sf::Texture& texture, float posX, float posY, float targetWidth)
+    : sprite(texture), animationTime(0.0f), collected(false) {
+    auto size = sprite.getTexture().getSize();
+    float scale = targetWidth*2.0f/ size.x;
+    sprite.setScale({ scale,scale });
+    sprite.setPosition({ posX, posY });
+    sprite.setOrigin({ size.x / 2.0f, size.y / 2.0f }); // 设置原点为中心，便于旋转
+
+     // 为每个金币设置独特的浮动偏移量
+    floatOffset = Tool::getRandomFloat(0.0f, 3.14f); // 0到π之间的随机值
 }
 
-void Glod::draw(sf::RenderWindow& window)
-{
-	window.draw(sprite);
-	sprite.setColor(sf::Color::White);  // 强制设为可见
+
+bool Glod::isOffScreen() const {
+    auto size = sprite.getTexture().getSize();
+    return sprite.getPosition().x < -static_cast<float>(size.x);
 }
 
-sf::Vector2f Glod::getPosition() const
-{
-	return sprite.getPosition();
+sf::FloatRect Glod::getBounds() const {
+    return sprite.getGlobalBounds();
 }
 
-void Glod::disapper()
-{
-	sprite.setScale({ 0.f, 0.f });
+void Glod::draw(sf::RenderWindow& window) {
+    if (!collected) {
+        window.draw(sprite);
+    }
+}
+void Glod::update(float deltaTime, float speed) {
+    if (!collected) {
+        sprite.move({ -speed * deltaTime, 0 });
+        updateAnimation(deltaTime);
+    }
 }
 
-void Glod::generate(std::vector<Glod>& glods)
-{
-	sf::Vector2f position = sprite.getPosition();
-	position.x += 1.f;
-	if (position.x > 800.F) position.x = 0.f;
-	sprite.setPosition(position);
+void Glod::collect() {
+    collected = true;
 }
+
+bool Glod::isCollected() const {
+    return collected;
+}
+
+void Glod::updateAnimation(float deltaTime) {
+    animationTime += deltaTime;
+
+    // 上下浮动效果 - 每个金币有独特的浮动相位
+    float offsetY = std::sin(animationTime * 5.0f + floatOffset) * 10.0f;
+    auto pos = sprite.getPosition();
+    sprite.setPosition({ pos.x, pos.y + offsetY * deltaTime * 60.0f });
+
+    // 缩放效果
+    //float scale = 1.0f + std::sin(animationTime * 3.0f + floatOffset) * 0.2f;
+    //sprite.setScale({ scale, scale });
+    
+
+    // 缩放效果 - 带上下限控制
+    float minScale = 1.0f;  // 最小缩放比例
+    float maxScale = 1.5f;  // 最大缩放比例
+    float scale = std::clamp(1.0f + std::sin(animationTime * 3.0f + floatOffset) * 0.2f, minScale, maxScale);
+    sprite.setScale({ scale, scale });
+}
+
 

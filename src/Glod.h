@@ -1,16 +1,25 @@
 #pragma once
-#include <string>
-#include<SFML/Graphics.hpp>
-#include <iostream>
+#include <SFML/Graphics.hpp>
+#include <vector>
+#define GLOD_H
 class Glod {
 public:
-	Glod(const std::string &texturePath,const sf::Vector2f &position);
-	void draw(sf::RenderWindow& window);
-	sf::Vector2f getPosition() const;
+    Glod(sf::Texture& texture, float posX, float posY, float targetWidth);
 
-	void disapper();
-	 void generate(std::vector<Glod>& glods);
+    void update(float deltaTime, float speed);
+    void draw(sf::RenderWindow& window);
+    bool isOffScreen() const;
+    sf::FloatRect getBounds() const;
+    void collect();
+    bool isCollected() const;
+
 private:
-	sf::Sprite sprite;
-	sf::Texture texture;
+    void updateAnimation(float deltaTime);
+
+    sf::Sprite sprite;
+    float animationTime;
+    bool collected;
+    float floatOffset;  // 每个金币独特的浮动偏移量
 };
+
+

@@ -86,6 +86,7 @@ void Bear::draw(sf::RenderWindow& window)
     window.draw(sprite);
 }
 
+
 void Bear::setPosition(const sf::Vector2f& position)
 {
     sprite.setPosition(position);
