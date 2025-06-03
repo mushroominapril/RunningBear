@@ -36,10 +36,8 @@ void Bear::update(float time)
 
     // 水平输入
     float direction = 0.f;
-   /* if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) direction -= 1.f;*/
-  /*  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
-
-    }*/
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) direction -= 1.f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) direction += 1.f;
 
     // 地面移动
     if (isOnGround) {
@@ -47,7 +45,7 @@ void Bear::update(float time)
         moveSpeed = std::max(-maxSpeed, std::min(moveSpeed, maxSpeed));
     }
     // 空中控制
-    else {
+    if(!isOnGround) {
         moveSpeed += direction * acceleration * airControl * time;
     }
 
@@ -101,4 +99,9 @@ sf::Vector2f Bear::getPosition() const
 
 sf::FloatRect Bear::getBounds() const {
     return sprite.getGlobalBounds();
+}
+
+float Bear::getSpeed() const
+{
+    return moveSpeed;
 }

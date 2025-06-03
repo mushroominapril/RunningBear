@@ -9,14 +9,13 @@
 #include"Glod.h"
 #include"GoldManager.h"
 #include"Obstacle.h"
-
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode({ 800,600 }), "My", sf::State::Windowed);
 	window.setTitle("SFML WIndow");
 	try {
 		Bear bear("sprite_01.png", "sprite_02.png", "sprite_03.png", "sprite_04.png", "sprite_05.png", { 400, 300 });
-		//Map map("map1.png","map1.png",100.f);
+		Map map("map1.png",100.F);
 		// 初始化金币管理器
 		GoldManager goldManager;
 		if (!goldManager.loadTexture()) {
@@ -52,8 +51,7 @@ int main()
 			}
 			bear.update(time);
 	/*		map.update(bear.getPosition(), time);*/
-
-	/*		map.update(time);*/
+			map.update(time);
 
 			// 更新金币系统
 			float bearWidth = bear.getBounds().size. x;
@@ -74,7 +72,7 @@ int main()
 			}
 
 			window.clear();
-		/*	map.draw(window);*/
+			map.draw(window);
 			goldManager.draw(window);
 			bear.draw(window);
 			obstacleManager.draw(window);

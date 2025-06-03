@@ -8,9 +8,9 @@
 Obstacle::Obstacle(sf::Texture& texture, float posX, float posY, float targetWidth)
 	: sprite(texture), animationTime(0.0f), animationSpeed(0.0f) {
 	auto size = sprite.getTexture().getSize();
-	float scaleX = targetWidth / size.x;
-	float scaleY = scaleX;
-	sprite.setScale({ scaleX, scaleY });
+	float scaleX = targetWidth / size.x*0.25;
+	float scaleY = scaleX*0.25;
+	sprite.setScale({ scaleX,scaleY });
 	float scaledHeight = size.y * scaleY;
 	sprite.setPosition({ posX, posY - scaledHeight });
 }
@@ -107,11 +107,11 @@ bool ObstacleManager::loadTextures() {
 		return false;
 	}
 	if (!longBlockTexture.loadFromFile("longBlock.png")) {
-		std::cerr << "�޷����س�·�������? "<< std::endl;
+		std::cerr << " "<< std::endl;
 		return false;
 	}
 	if (!balloonTexture.loadFromFile("balloon.png")) {
-		std::cerr << "�޷����ع�����������" << std::endl;
+		std::cerr << "" << std::endl;
 		return false;
 	}
 	return true;
