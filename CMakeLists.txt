@@ -12,7 +12,17 @@ FetchContent_Declare(SFML
     SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
-add_executable(main src/main.cpp "src/Bear.h" "src/Bear.cpp" "src/Map.cpp" "src/Glod.cpp" "src/Glod.h" "src/Tool.h" "src/Tool.cpp" "src/Obstacle.h" "src/Obstacle.cpp" "src/Music.h" "src/GameState.h" "src/m3.cpp"  "src/GoldManager.cpp" "src/GoldManager.h")
+add_executable(main
+    src/main.cpp
+    src/Bear.cpp
+    src/Map.cpp
+    src/Glod.cpp
+    src/Tool.cpp
+    src/Obstacle.cpp
+    src/m3.cpp
+    src/GoldManager.cpp
+    src/UI.cpp 
+)
 
 target_compile_features(main PRIVATE cxx_std_17)
 target_link_libraries(main PRIVATE SFML::Graphics)

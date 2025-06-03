@@ -9,13 +9,16 @@
 #include"Glod.h"
 #include"GoldManager.h"
 #include"Obstacle.h"
+#include"UI.h"
+
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode({ 800,600 }), "My", sf::State::Windowed);
 	window.setTitle("SFML WIndow");
 	try {
 		Bear bear("sprite_01.png", "sprite_02.png", "sprite_03.png", "sprite_04.png", "sprite_05.png", { 400, 300 });
-		Map map("map1.png",100.F);
+		Map map("map1.png", 100.f);
+
 		// 初始化金币管理器
 		GoldManager goldManager;
 		if (!goldManager.loadTexture()) {
@@ -23,15 +26,35 @@ int main()
 			return -1;
 		}
 
-		// 游戏状态变量
-		int score = 0;//积分
-		const float groundY = 450.0f; // 地面Y坐标
-		const float gameSpeed = 200.0f; // 游戏基础速度
-
 		ObstacleManager obstacleManager;
 		if (!obstacleManager.loadTextures()) { return -1; }
 
+		sf::Font font;
+		if (!font.openFromFile("C:/Windows/Fonts/arial.ttf")) {
+			std::cerr << "Failed to load font!" << std::endl;
+			return -1;
+		}
+		UIManager uiManager(font);
+
+		// 游戏状态变量
+		int score = 0;//积分
+		bool isGameOver = false;
+		const float groundY = 450.0f; // 地面Y坐标
+		const float gameSpeed = 200.0f; // 游戏基础速度
+
 		sf::Clock clock;
+
+		uiManager.setRestartCallback([&]() {
+			isGameOver = false;
+			score = 0;
+			clock.restart();
+			bear.reset({ 400, 300 });
+			goldManager.reset();
+			obstacleManager.reset();
+			uiManager.setGameOver(false);
+			uiManager.updateScore(0);
+			});
+
 		/*       sf::Music backgroundMusic;
 			   if (!backgroundMusic.openFromFile("background_music.ogg")) {
 				   std::cerr << "Failed to load background music!" << std::endl;
@@ -48,27 +71,32 @@ int main()
 				if (event->is<sf::Event::Closed>()) {
 					window.close();
 				}
-			}
-			bear.update(time);
-	/*		map.update(bear.getPosition(), time);*/
-			map.update(time);
-
-			// 更新金币系统
-			float bearWidth = bear.getBounds().size. x;
-			goldManager.update(time, gameSpeed, groundY, bearWidth);
-
-			// 检查金币收集//此处实现计分
-			int collected = goldManager.checkCollection(bear.getBounds());
-			if (collected > 0) {
-				score += collected * 10;
-				/*scoreText.setString("Score: " + std::to_string(score));*/
-				std::cout << "Collected " << collected << " gold! Score: " << score << std::endl;
+				uiManager.handleEvent(*event, window);
 			}
 
-			obstacleManager.update(time, 200.0f, bearWidth);
+			if (!isGameOver) {
+				bear.update(time);
+				map.update(time);
 
-			if (obstacleManager.checkCollision(bear.getBounds())) {
-				std::cout << "si!" << std::endl;
+				// 更新金币系统
+				float bearWidth = bear.getBounds().size.x;
+
+
+				// 检查金币收集//此处实现计分
+				int collected = goldManager.checkCollection(bear.getBounds());
+				if (collected > 0) {
+					score += collected * 10;
+					/*scoreText.setString("Score: " + std::to_string(score));*/
+					std::cout << "Collected " << collected << " gold! Score: " << score << std::endl;
+				}
+
+				obstacleManager.update(time, 200.0f, bearWidth);
+
+				if (obstacleManager.checkCollision(bear.getBounds())) {
+					isGameOver = true;
+					uiManager.setGameOver(true);
+					std::cout << "Game Over!" << std::endl;
+				}
 			}
 
 			window.clear();

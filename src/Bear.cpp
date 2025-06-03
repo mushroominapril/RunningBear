@@ -105,3 +105,8 @@ float Bear::getSpeed() const
 {
     return moveSpeed;
 }
+
+void Bear::reset(const sf::Vector2f& position) {
+    this->position = position;
+    sprite.setPosition(position);
+}
