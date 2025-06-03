@@ -36,8 +36,10 @@ void Bear::update(float time)
 
     // 水平输入
     float direction = 0.f;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) direction -= 1.f;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) direction += 1.f;
+   /* if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) direction -= 1.f;*/
+  /*  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
+
+    }*/
 
     // 地面移动
     if (isOnGround) {

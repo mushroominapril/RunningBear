@@ -99,15 +99,15 @@ ObstacleManager::ObstacleManager()
 
 bool ObstacleManager::loadTextures() {
 	if (!smallBlockTexture.loadFromFile("smallBlock.png")) {
-		std::cerr << "�޷�����С·�������" << std::endl;
-		return false;
+		std::cerr << "" << std::endl;
+			return false;
 	}
 	if (!bigBlockTexture.loadFromFile("bigBlock.png")) {
-		std::cerr << "�޷����ش�·�������" << std::endl;
+		std::cerr << "" << std::endl;
 		return false;
 	}
 	if (!longBlockTexture.loadFromFile("longBlock.png")) {
-		std::cerr << "�޷����س�·�������" << std::endl;
+		std::cerr << "�޷����س�·�������? "<< std::endl;
 		return false;
 	}
 	if (!balloonTexture.loadFromFile("balloon.png")) {
