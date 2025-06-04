@@ -101,12 +101,12 @@ sf::FloatRect Bear::getBounds() const {
     return sprite.getGlobalBounds();
 }
 
-float Bear::getSpeed() const
-{
-    return moveSpeed;
-}
-
 void Bear::reset(const sf::Vector2f& position) {
-    this->position = position;
-    sprite.setPosition(position);
+    this->position = position;           // 更新内部位置变量
+    sprite.setPosition(position);        // 更新sprite的位置
+    moveSpeed = 0.f;                     // 水平速度归零
+    verticalVelocity = 0.f;              // 竖直速度归零
+    isOnGround = true;                   // 假设复位时处于地面
+    currentTextureIndex = 0;             // 纹理索引复位
+    pastTime = 0.f;                     // 时间计数器归零
 }
