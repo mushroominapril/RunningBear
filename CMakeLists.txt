@@ -19,7 +19,7 @@ add_executable(main
     src/Glod.cpp
     src/Tool.cpp
     src/Obstacle.cpp
-    src/m3.cpp
+    
     src/GoldManager.cpp
     src/UI.cpp 
 )

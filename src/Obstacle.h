@@ -3,88 +3,97 @@
 #include <vector>
 #include <memory>
 
-// ï¿½Ï°ï¿½ï¿½ï¿½ï¿½ï¿½
 class Obstacle {
 public:
-	Obstacle(sf::Texture& texture, float posX, float posY, float targetWidth);
+	Obstacle::Obstacle(sf::Texture& texture, float posX, float posY);
 	virtual ~Obstacle() = default;
-
-	virtual void update(float deltaTime, float speed); // ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½
-	virtual bool isOffScreen() const; // ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½Ñ¾ï¿½ï¿½Æ³ï¿½ï¿½ï¿½Ä»
-	virtual sf::FloatRect getBounds() const; // ï¿½ï¿½È¡ï¿½Ï°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ß½ï¿½
-	virtual void draw(sf::RenderWindow& window); // ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½
-
 	const sf::Sprite& getSprite() const;
 
+	virtual void update(float deltaTime, float speed); // ¸üÐÂÕÏ°­ÎïµÄÎ»ÖÃ
+	virtual bool isOffScreen() const; // ¼ì²éÕÏ°­ÎïÊÇ·ñÒÑ¾­ÒÆ³öÆÁÄ»
+	virtual sf::FloatRect getBounds() const; // »ñÈ¡ÕÏ°­ÎïµÄÅö×²±ß½ç
+	virtual void draw(sf::RenderWindow& window); // »æÖÆÕÏ°­Îï
+	void setCollisionBoundsPadding(float paddingX, float paddingY);
+
+	void drawDebug(sf::RenderWindow& window);
 protected:
-	virtual void updateAnimation(float deltaTime) = 0; // ï¿½ï¿½ï¿½Â¶ï¿½ï¿½ï¿½Ð§ï¿½ï¿½
+
+	virtual void updateAnimation(float deltaTime) = 0; // ¸üÐÂ¶¯»­Ð§¹û
+	
+	void initializePositionAndBounds(float posX, float posY);
+	void calculatePreciseCollisionBounds();
+
 
 	sf::Sprite sprite;
 	float animationTime;
 	float animationSpeed;
+	sf::Vector2f initialPosition;
+
+	sf::Vector2f originalScale; // ±£´æÔ­Ê¼Ëõ·Å±ÈÀý
+	sf::FloatRect collisionBounds; // ×Ô¶¨ÒåÅö×²±ß½ç
 };
 
-// Ð¡ï¿½Ï°ï¿½ï¿½ï¿½
+// 
 class SmallBlock : public Obstacle {
 public:
-	SmallBlock(sf::Texture& texture, float posX, float posY, float targetWidth);
+	SmallBlock::SmallBlock(sf::Texture& texture, float posX, float posY);
 protected:
 	void updateAnimation(float deltaTime) override;
 };
 
-// ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½
+// 
 class BigBlock : public Obstacle {
 public:
-	BigBlock(sf::Texture& texture, float posX, float posY, float targetWidth);
+	BigBlock(sf::Texture& texture, float posX, float posY);
 protected:
 	void updateAnimation(float deltaTime) override;
 };
 
-// ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½
+// 
 class LongBlock : public Obstacle {
 public:
-	LongBlock(sf::Texture& texture, float posX, float posY, float targetWidth);
+	LongBlock(sf::Texture& texture, float posX, float posY);
 protected:
 	void updateAnimation(float deltaTime) override;
 };
 
-// ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½
+// 
 class Balloon : public Obstacle {
 public:
-	Balloon(sf::Texture& texture, float posX, float posY, float targetWidth);
+	Balloon(sf::Texture& texture, float posX, float posY);
 protected:
 	void updateAnimation(float deltaTime) override;
 };
 
-// ï¿½Ï°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//
 class ObstacleManager {
 public:
 	ObstacleManager();
 
-	bool loadTextures(); // ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-	void update(float deltaTime, float speed, float targetWidth); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½
-	/*bool checkCollision(const sf::FloatRect& playerBounds);*/
-	bool checkCollision(const sf::Sprite& playerSprite);
-	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òµï¿½ï¿½ï¿½×²
-	void draw(sf::RenderWindow& window); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½
-	void reset(); // ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½ÏµÍ³
-	void increaseDifficulty(float gameTime); // ï¿½Ñ¶Èµï¿½ï¿½ï¿½
+	bool loadTextures(); // ¼ÓÔØÕÏ°­ÎïÎÆÀí
+	void update(float deltaTime, float speed); // ¸üÐÂËùÓÐÕÏ°­Îï
+	bool checkCollision(const sf::Sprite& playerSprite); // ¼ì²âÓëÍæ¼ÒµÄÅö×²
+	void draw(sf::RenderWindow& window); // »æÖÆËùÓÐÕÏ°­Îï
+	void reset(); // ÖØÖÃÕÏ°­ÎïÏµÍ³
+	void increaseDifficulty(float gameTime); // ÄÑ¶Èµ÷Õû
 
+	void drawDebug(sf::RenderWindow& window);
 private:
-	void spawnObstacle(float groundY, float targetWidth); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½
-	float getRandomSpawnTime() const; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
-	int getRandomObstacleType() const; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-	std::vector<std::unique_ptr<Obstacle>> obstacles; // ï¿½æ´¢ï¿½ï¿½Ç°ï¿½ï¿½Ô¾ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	void spawnObstacle(float groundY);
+	float getRandomSpawnTime() const; 
+	int getRandomObstacleType() const;
+
+	std::vector<std::unique_ptr<Obstacle>> obstacles;
 	sf::Texture smallBlockTexture;
 	sf::Texture bigBlockTexture;
 	sf::Texture longBlockTexture;
 	sf::Texture balloonTexture;
 
-	float spawnTimer; // ï¿½ï¿½ï¿½É¼ï¿½Ê±ï¿½ï¿½
-	float nextSpawnTime; // ï¿½Â´ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
-	float minSpawnTime; // ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
-	float maxSpawnTime; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
-	float lastObstacleX; // ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½
-	float minObstacleDistance; // ï¿½Ï°ï¿½ï¿½ï¿½Ö®ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½ï¿½ï¿½
+	float spawnTimer; 
+	float nextSpawnTime;
+	float minSpawnTime; 
+	float maxSpawnTime; 
+	float lastObstacleX;
+	float minObstacleDistance; 
 };

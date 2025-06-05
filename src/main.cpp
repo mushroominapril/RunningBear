@@ -123,7 +123,7 @@ int main()
 					std::cout << "Collected " << collected << " gold! Score: " << score << std::endl;
 				}
 
-				obstacleManager.update(time, 200.0f, bearWidth);
+				obstacleManager.update(time, 200.0f);
 
 				if (obstacleManager.checkCollision(bear.getSprite())) {
 					isGameOver = true;
@@ -139,6 +139,7 @@ int main()
 			goldManager.draw(window);
 			bear.draw(window);
 			obstacleManager.draw(window);
+			obstacleManager.drawDebug(window);
 			uiManager.draw(window);
 			window.display();
 		}

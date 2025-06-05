@@ -67,11 +67,21 @@ bool Tool::checkPixelCollision(const sf::Sprite& sprite1, const sf::Sprite& spri
 }
 
 int Tool::getRandomInt(int min, int max) {
+    if (min > max) {
+        std::swap(min, max);
+    }
     std::uniform_int_distribution<> dis(min, max);
     return dis(gen);
 }
 
 float Tool::getRandomFloat(float min, float max) {
+    if (min > max) {
+        std::swap(min, max);
+    }
+    if (min < 0 && max > min + std::numeric_limits<float>::max()) {
+        max = min + std::numeric_limits<float>::max();
+    }
+
     std::uniform_real_distribution<float> dis(min, max);
     return dis(gen);
 }

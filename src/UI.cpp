@@ -7,7 +7,7 @@ UILabel::UILabel(const sf::Font& font, const std::string& text, unsigned int siz
 	m_text.setString(text);
 	m_text.setCharacterSize(size);
 	m_text.setFillColor(sf::Color::Black);
-	m_text.setPosition({ position.x,position.y - 100.f });
+	m_text.setPosition(position);
 }
 
 void UILabel::setText(const std::string& text) {
@@ -27,7 +27,7 @@ UIButton::UIButton(const sf::Font& font, const std::string& text, unsigned int s
 	sf::Vector2f position, sf::Vector2f sizeRect)
 	: m_text(font) {
 	m_background.setSize(sizeRect);
-	m_background.setFillColor(sf::Color::Blue);
+	m_background.setFillColor(sf::Color(60, 120, 200));
 	m_background.setPosition(position);
 
 	m_text.setString(text);

@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <cstdint>
 #include <random>
 
 namespace Tool {
