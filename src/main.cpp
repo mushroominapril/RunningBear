@@ -113,9 +113,10 @@ int main()
 
 				// 更新金币系统
 				float bearWidth = bear.getBounds().size.x;
+				goldManager.update(time, 200.F, groundY, bearWidth);
 
 				// 检查金币收集//此处实现计分
-				int collected = goldManager.checkCollection(bear.getBounds());
+				int collected = goldManager.checkCollection(bear.getSprite());
 				if (collected > 0) {
 					score += collected * 10;
 					/*scoreText.setString("Score: " + std::to_string(score));*/
@@ -124,7 +125,7 @@ int main()
 
 				obstacleManager.update(time, 200.0f, bearWidth);
 
-				if (obstacleManager.checkCollision(bear.getBounds())) {
+				if (obstacleManager.checkCollision(bear.getSprite())) {
 					isGameOver = true;
 					uiManager.setGameOver(true);
 					std::cout << "Game Over!" << std::endl;

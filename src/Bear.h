@@ -31,6 +31,7 @@ public:
 	void setPosition(const sf::Vector2f& Position);
 	sf::Vector2f getPosition() const;
 	sf::FloatRect getBounds() const;
-	float getSpeed() const;
+	//float getSpeed() const;
+	const sf::Sprite& getSprite() const;
 	void reset(const sf::Vector2f& position);
 };

@@ -3,26 +3,28 @@
 #include <vector>
 #include <memory>
 
-// ÕÏ°­ÎïÀà
+// ï¿½Ï°ï¿½ï¿½ï¿½ï¿½ï¿½
 class Obstacle {
 public:
 	Obstacle(sf::Texture& texture, float posX, float posY, float targetWidth);
 	virtual ~Obstacle() = default;
 
-	virtual void update(float deltaTime, float speed); // ¸üĞÂÕÏ°­ÎïµÄÎ»ÖÃ
-	virtual bool isOffScreen() const; // ¼ì²éÕÏ°­ÎïÊÇ·ñÒÑ¾­ÒÆ³öÆÁÄ»
-	virtual sf::FloatRect getBounds() const; // »ñÈ¡ÕÏ°­ÎïµÄÅö×²±ß½ç
-	virtual void draw(sf::RenderWindow& window); // »æÖÆÕÏ°­Îï
+	virtual void update(float deltaTime, float speed); // ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½
+	virtual bool isOffScreen() const; // ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½Ñ¾ï¿½ï¿½Æ³ï¿½ï¿½ï¿½Ä»
+	virtual sf::FloatRect getBounds() const; // ï¿½ï¿½È¡ï¿½Ï°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ß½ï¿½
+	virtual void draw(sf::RenderWindow& window); // ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½
+
+	const sf::Sprite& getSprite() const;
 
 protected:
-	virtual void updateAnimation(float deltaTime) = 0; // ¸üĞÂ¶¯»­Ğ§¹û
+	virtual void updateAnimation(float deltaTime) = 0; // ï¿½ï¿½ï¿½Â¶ï¿½ï¿½ï¿½Ğ§ï¿½ï¿½
 
 	sf::Sprite sprite;
 	float animationTime;
 	float animationSpeed;
 };
 
-// Ğ¡ÕÏ°­Îï
+// Ğ¡ï¿½Ï°ï¿½ï¿½ï¿½
 class SmallBlock : public Obstacle {
 public:
 	SmallBlock(sf::Texture& texture, float posX, float posY, float targetWidth);
@@ -30,7 +32,7 @@ protected:
 	void updateAnimation(float deltaTime) override;
 };
 
-// ´óÕÏ°­Îï
+// ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½
 class BigBlock : public Obstacle {
 public:
 	BigBlock(sf::Texture& texture, float posX, float posY, float targetWidth);
@@ -38,7 +40,7 @@ protected:
 	void updateAnimation(float deltaTime) override;
 };
 
-// ³¤ÕÏ°­Îï
+// ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½
 class LongBlock : public Obstacle {
 public:
 	LongBlock(sf::Texture& texture, float posX, float posY, float targetWidth);
@@ -46,7 +48,7 @@ protected:
 	void updateAnimation(float deltaTime) override;
 };
 
-// ÆøÇòÕÏ°­Îï
+// ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½
 class Balloon : public Obstacle {
 public:
 	Balloon(sf::Texture& texture, float posX, float posY, float targetWidth);
@@ -54,33 +56,35 @@ protected:
 	void updateAnimation(float deltaTime) override;
 };
 
-// ÕÏ°­Îï¹ÜÀíÆ÷Àà
+// ï¿½Ï°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 class ObstacleManager {
 public:
 	ObstacleManager();
 
-	bool loadTextures(); // ¼ÓÔØÕÏ°­ÎïÎÆÀí
-	void update(float deltaTime, float speed, float targetWidth); // ¸üĞÂËùÓĞÕÏ°­Îï
-	bool checkCollision(const sf::FloatRect& playerBounds); // ¼ì²âÓëÍæ¼ÒµÄÅö×²
-	void draw(sf::RenderWindow& window); // »æÖÆËùÓĞÕÏ°­Îï
-	void reset(); // ÖØÖÃÕÏ°­ÎïÏµÍ³
-	void increaseDifficulty(float gameTime); // ÄÑ¶Èµ÷Õû
+	bool loadTextures(); // ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	void update(float deltaTime, float speed, float targetWidth); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½
+	/*bool checkCollision(const sf::FloatRect& playerBounds);*/
+	bool checkCollision(const sf::Sprite& playerSprite);
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òµï¿½ï¿½ï¿½×²
+	void draw(sf::RenderWindow& window); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½
+	void reset(); // ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½ÏµÍ³
+	void increaseDifficulty(float gameTime); // ï¿½Ñ¶Èµï¿½ï¿½ï¿½
 
 private:
-	void spawnObstacle(float groundY, float targetWidth); // Éú³ÉĞÂÕÏ°­Îï
-	float getRandomSpawnTime() const; // Éú³ÉËæ»úÉú³ÉÊ±¼ä
-	int getRandomObstacleType() const; // Éú³ÉËæ»úÕÏ°­ÎïÀàĞÍ
+	void spawnObstacle(float groundY, float targetWidth); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½
+	float getRandomSpawnTime() const; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+	int getRandomObstacleType() const; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-	std::vector<std::unique_ptr<Obstacle>> obstacles; // ´æ´¢µ±Ç°»îÔ¾µÄÕÏ°­Îï¶ÔÏó
+	std::vector<std::unique_ptr<Obstacle>> obstacles; // ï¿½æ´¢ï¿½ï¿½Ç°ï¿½ï¿½Ô¾ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	sf::Texture smallBlockTexture;
 	sf::Texture bigBlockTexture;
 	sf::Texture longBlockTexture;
 	sf::Texture balloonTexture;
 
-	float spawnTimer; // Éú³É¼ÆÊ±Æ÷
-	float nextSpawnTime; // ÏÂ´ÎÉú³ÉÊ±¼ä
-	float minSpawnTime; // ×îĞ¡Éú³ÉÊ±¼ä¼ä¸ô
-	float maxSpawnTime; // ×î´óÉú³ÉÊ±¼ä¼ä¸ô
-	float lastObstacleX; // ÉÏÒ»¸öÕÏ°­ÎïµÄX×ø±ê
-	float minObstacleDistance; // ÕÏ°­ÎïÖ®¼äµÄ×îĞ¡¾àÀë
+	float spawnTimer; // ï¿½ï¿½ï¿½É¼ï¿½Ê±ï¿½ï¿½
+	float nextSpawnTime; // ï¿½Â´ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+	float minSpawnTime; // ï¿½ï¿½Ğ¡ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
+	float maxSpawnTime; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
+	float lastObstacleX; // ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½
+	float minObstacleDistance; // ï¿½Ï°ï¿½ï¿½ï¿½Ö®ï¿½ï¿½ï¿½ï¿½ï¿½Ğ¡ï¿½ï¿½ï¿½ï¿½
 };

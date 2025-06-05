@@ -47,6 +47,12 @@ bool Glod::isCollected() const {
     return collected;
 }
 
+const sf::Sprite& Glod::getSprite() const
+{
+    // TODO: 在此处插入 return 语句
+    return sprite;
+}
+
 void Glod::updateAnimation(float deltaTime) {
     animationTime += deltaTime;
 

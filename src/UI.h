@@ -42,23 +42,23 @@ public:
     void setExitCallback(std::function<void()> callback);
     void updateAnimation(float deltaTime);
 private:
-    UILabel m_scoreLabel;    // ·ÖÊý±êÇ©
-    UILabel m_statusLabel;   // ×´Ì¬±êÇ©£¨ÓÎÏ·½áÊøÌáÊ¾£©
-    UIButton m_restartButton; // ÖØÆô°´Å¥
-    UIButton m_startButton;  // ¿ªÊ¼ÓÎÏ·°´Å¥
-    UIButton m_exitButton;   // ÍË³öÓÎÏ·°´Å¥
-    UILabel m_titleLabel;    // ÓÎÏ·±êÌâ
+    UILabel m_scoreLabel;    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç©
+    UILabel m_statusLabel;   // ×´Ì¬ï¿½ï¿½Ç©ï¿½ï¿½ï¿½ï¿½Ï·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½
+    UIButton m_restartButton; // ï¿½ï¿½ï¿½ï¿½ï¿½Å¥
+    UIButton m_startButton;  // ï¿½ï¿½Ê¼ï¿½ï¿½Ï·ï¿½ï¿½Å¥
+    UIButton m_exitButton;   // ï¿½Ë³ï¿½ï¿½ï¿½Ï·ï¿½ï¿½Å¥
+    UILabel m_titleLabel;    // ï¿½ï¿½Ï·ï¿½ï¿½ï¿½ï¿½
 
-    std::vector<sf::Texture> m_menuFrames; // ¶¯»­Ö¡ÎÆÀí
-    sf::Sprite m_menuSprite;                // µ±Ç°Ö¡¾«Áé
-    float m_frameTime = 0.1f;               // Ã¿Ö¡³ÖÐøÊ±¼ä£¨Ãë£©
-    float m_currentTime = 0.f;              // µ±Ç°Ö¡ÀÛ¼ÆÊ±¼ä
-    size_t m_currentFrame = 0;              // µ±Ç°Ö¡Ë÷Òý
-    bool m_animationLoaded = false;         // ¶¯»­ÊÇ·ñ¼ÓÔØ³É¹¦
+    std::vector<sf::Texture> m_menuFrames; // ï¿½ï¿½ï¿½ï¿½Ö¡ï¿½ï¿½ï¿½ï¿½
+    sf::Sprite m_menuSprite;                // ï¿½ï¿½Ç°Ö¡ï¿½ï¿½ï¿½ï¿½
+    float m_frameTime = 0.1f;               // Ã¿Ö¡ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ä£¨ï¿½ë£©
+    float m_currentTime = 0.f;              // ï¿½ï¿½Ç°Ö¡ï¿½Û¼ï¿½Ê±ï¿½ï¿½
+    size_t m_currentFrame = 0;              // ï¿½ï¿½Ç°Ö¡ï¿½ï¿½ï¿½ï¿½
+    bool m_animationLoaded = false;         // ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½Ø³É¹ï¿½
 
-    bool m_isGameOver;       // ÓÎÏ·ÊÇ·ñ½áÊø
-    bool m_isInMainMenu;     // ÊÇ·ñÔÚÖ÷²Ëµ¥
-    std::function<void()> m_callback;  // ÖØÆô»Øµ÷
-    std::function<void()> m_startCallback; // ¿ªÊ¼ÓÎÏ·»Øµ÷
-    std::function<void()> m_exitCallback;  // ÍË³öÓÎÏ·»Øµ÷
+    bool m_isGameOver;       // ï¿½ï¿½Ï·ï¿½Ç·ï¿½ï¿½ï¿½ï¿½
+    bool m_isInMainMenu;     // ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ëµï¿½
+    std::function<void()> m_callback;  // ï¿½ï¿½ï¿½ï¿½Øµï¿½
+    std::function<void()> m_startCallback; // ï¿½ï¿½Ê¼ï¿½ï¿½Ï·ï¿½Øµï¿½
+    std::function<void()> m_exitCallback;  // ï¿½Ë³ï¿½ï¿½ï¿½Ï·ï¿½Øµï¿½
 };

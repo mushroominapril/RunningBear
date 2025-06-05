@@ -12,7 +12,7 @@ public:
     sf::FloatRect getBounds() const;
     void collect();
     bool isCollected() const;
-
+    const sf::Sprite& getSprite() const;
 private:
     void updateAnimation(float deltaTime);
 

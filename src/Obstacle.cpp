@@ -8,8 +8,8 @@
 Obstacle::Obstacle(sf::Texture& texture, float posX, float posY, float targetWidth)
 	: sprite(texture), animationTime(0.0f), animationSpeed(0.0f) {
 	auto size = sprite.getTexture().getSize();
-	float scaleX = targetWidth / size.x*0.25;
-	float scaleY = scaleX*0.25;
+	float scaleX = targetWidth / size.x;
+	float scaleY = scaleX;
 	sprite.setScale({ scaleX,scaleY });
 	float scaledHeight = size.y * scaleY;
 	sprite.setPosition({ posX, posY - scaledHeight });
@@ -168,14 +168,24 @@ int ObstacleManager::getRandomObstacleType() const {
 	return Tool::getRandomInt(0, 3);
 }
 
-bool ObstacleManager::checkCollision(const sf::FloatRect& playerBounds) {
+//bool ObstacleManager::checkCollision(const sf::FloatRect& playerBounds) {
+//	for (const auto& obstacle : obstacles) {
+//		if (Tool::checkCollision(obstacle, obstaz) {
+//			return true;
+//		}
+//	}
+//	return false;
+//}
+bool ObstacleManager::checkCollision(const sf::Sprite& playerSprite)
+{
 	for (const auto& obstacle : obstacles) {
-		if (Tool::checkCollision(playerBounds, obstacle->getBounds())) {
+		if (Tool::checkPixelCollision(playerSprite, obstacle->getSprite())) {
 			return true;
 		}
 	}
 	return false;
 }
+
 
 void ObstacleManager::draw(sf::RenderWindow& window) {
 	for (const auto& obstacle : obstacles) {
@@ -200,4 +210,7 @@ void ObstacleManager::increaseDifficulty(float gameTime) {
 	minSpawnTime = std::max(0.5f, 1.0f - gameTime / 60.0f);
 	maxSpawnTime = std::max(1.5f, 3.0f - gameTime / 30.0f);
 	minObstacleDistance = std::max(150.0f, 300.0f - gameTime / 2.0f);
+}
+const sf::Sprite& Obstacle::getSprite() const {
+	return sprite;  // �����ϰ���� Sprite
 }

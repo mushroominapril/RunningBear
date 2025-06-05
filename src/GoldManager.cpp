@@ -63,16 +63,27 @@ void GoldManager::spawnGoldGroup(float groundY, float targetWidth) {
     lastGoldX = startX + (goldCount - 1) * spacing;
 }
 
-int GoldManager::checkCollection(const sf::FloatRect& playerBounds) {
+//int GoldManager::checkCollection(const sf::FloatRect& playerBounds) {
+//    int collectedCount = 0;
+//    for (auto& gold : golds) {
+//        if (!gold->isCollected() && Tool::checkCollision(playerBounds, gold->getBounds())) {
+//            gold->collect();
+//            collectedCount++;
+//        }
+//    }
+//    return collectedCount;
+//}
+int GoldManager::checkCollection(const sf::Sprite& playerSprite) {
     int collectedCount = 0;
     for (auto& gold : golds) {
-        if (!gold->isCollected() && Tool::checkCollision(playerBounds, gold->getBounds())) {
+        if (!gold->isCollected() && Tool::checkPixelCollision(playerSprite,gold->getSprite())) {
             gold->collect();
             collectedCount++;
         }
     }
     return collectedCount;
 }
+
 
 void GoldManager::draw(sf::RenderWindow& window) {
     for (const auto& gold : golds) {
@@ -96,3 +107,5 @@ void GoldManager::increaseDifficulty(float gameTime) {
     maxSpawnTime = std::max(0.8f, 2.0f - gameTime / 60.0f);
     minGoldDistance = std::max(100.0f, 200.0f - gameTime / 3.0f);
 }
+
+

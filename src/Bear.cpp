@@ -101,6 +101,12 @@ sf::FloatRect Bear::getBounds() const {
     return sprite.getGlobalBounds();
 }
 
+const sf::Sprite& Bear::getSprite() const
+{
+    // TODO: 在此处插入 return 语句
+    return sprite;
+}
+
 void Bear::reset(const sf::Vector2f& position) {
     this->position = position;           // 更新内部位置变量
     sprite.setPosition(position);        // 更新sprite的位置

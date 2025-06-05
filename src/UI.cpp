@@ -86,20 +86,20 @@ UIManager::UIManager(const sf::Font& font, const std::vector<sf::Texture>& frame
 	m_isGameOver(false),
 	m_isInMainMenu(true)
 {
-	// ÉèÖÃ¶¯»­ÊÇ·ñ¼ÓÔØ³É¹¦
+	// ï¿½ï¿½ï¿½Ã¶ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½Ø³É¹ï¿½
 	m_animationLoaded = !frames.empty();
 
-	// ÉèÖÃ¶¯»­SpriteµÄÎ»ÖÃ£¨¸²¸ÇÈ«´°¿Ú£©
+	// ï¿½ï¿½ï¿½Ã¶ï¿½ï¿½ï¿½Spriteï¿½ï¿½Î»ï¿½Ã£ï¿½ï¿½ï¿½ï¿½ï¿½È«ï¿½ï¿½ï¿½Ú£ï¿½
 	m_menuSprite.setPosition({ 0.f, 0.f });
 
-	// µ÷Õû UI ÔªËØÎ»ÖÃÊ¹Æä¾ÓÖÐ
-	const float centerX = 400.f; // ´°¿Ú¿í¶ÈµÄÒ»°ë£¬ÊÓÄãµÄ´°¿Ú³ß´çµ÷Õû
+	// ï¿½ï¿½ï¿½ï¿½ UI Ôªï¿½ï¿½Î»ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½
+	const float centerX = 400.f; // ï¿½ï¿½ï¿½Ú¿ï¿½Èµï¿½Ò»ï¿½ë£¬ï¿½ï¿½ï¿½ï¿½Ä´ï¿½ï¿½Ú³ß´ï¿½ï¿½ï¿½ï¿½
 
 	m_titleLabel.setPosition({ centerX - 200.f, 80.f });
 	m_startButton.setPosition({ centerX - 100.f, 300.f });
 	m_exitButton.setPosition({ centerX - 100.f, 380.f });
 
-	// ÉèÖÃ°´Å¥»Øµ÷
+	// ï¿½ï¿½ï¿½Ã°ï¿½Å¥ï¿½Øµï¿½
 	m_restartButton.setCallback([this]() {
 		if (m_isGameOver && m_callback) {
 			m_callback();
@@ -148,20 +148,20 @@ void UIManager::setExitCallback(std::function<void()> callback) {
 void UIManager::draw(sf::RenderWindow& window) {
 	if (m_isInMainMenu) {
 		if (m_animationLoaded) {
-			// »ñÈ¡´°¿ÚºÍÎÆÀí³ß´ç
+			// ï¿½ï¿½È¡ï¿½ï¿½ï¿½Úºï¿½ï¿½ï¿½ï¿½ï¿½ß´ï¿½
 			sf::Vector2u windowSize = window.getSize();
 			sf::Vector2u textureSize = m_menuFrames[m_currentFrame].getSize();
 
 			float scaleX = static_cast<float>(windowSize.x) / textureSize.x;
 			float scaleY = static_cast<float>(windowSize.y) / textureSize.y;
 
-			m_menuSprite.setScale({ scaleX, scaleY }); // Ëõ·Å±³¾°Í¼
-			m_menuSprite.setPosition({ 0.f, 0.f });    // È·±£×óÉÏ½Ç¶ÔÆë´°¿Ú
+			m_menuSprite.setScale({ scaleX, scaleY }); // ï¿½ï¿½ï¿½Å±ï¿½ï¿½ï¿½Í¼
+			m_menuSprite.setPosition({ 0.f, 0.f });    // È·ï¿½ï¿½ï¿½ï¿½ï¿½Ï½Ç¶ï¿½ï¿½ë´°ï¿½ï¿½
 
 			window.draw(m_menuSprite);
 		}
-		// SFML »á×Ô¶¯»æÖÆÊÓÆµÖ¡µ½´°¿Ú
-		// Ö»Ðè»æÖÆUIÔªËØ
+		// SFML ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÆµÖ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		// Ö»ï¿½ï¿½ï¿½ï¿½ï¿½UIÔªï¿½ï¿½
 		m_titleLabel.draw(window);
 		m_startButton.draw(window);
 		m_exitButton.draw(window);

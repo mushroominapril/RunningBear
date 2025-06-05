@@ -9,10 +9,12 @@ public:
 
     bool loadTexture();
     void update(float deltaTime, float speed, float groundY, float targetWidth);
-    int checkCollection(const sf::FloatRect& playerBounds);
+    //int checkCollection(const sf::FloatRect& playerBounds);
+    int checkCollection(const sf::Sprite& playerSprite);
     void draw(sf::RenderWindow& window);
     void reset();
     void increaseDifficulty(float gameTime);
+ 
 
 private:
     void spawnGoldGroup(float groundY, float targetWidth);  // 修改为生成一组金币
