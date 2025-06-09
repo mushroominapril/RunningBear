@@ -20,7 +20,6 @@ int main()
 		Bear bear("sprite_01.png", "sprite_02.png", "sprite_03.png", "sprite_04.png", "sprite_05.png", { 400, 300 });
 		Map map("map1.png", 100.f);
 
-		// 初始化金币管理器
 		GoldManager goldManager;
 		if (!goldManager.loadTexture()) {
 			std::cerr << "Failed to load gold textures!" << std::endl;
@@ -74,16 +73,7 @@ int main()
 			window.close();
 			});
 
-		// 在游戏循环开始前显示主菜单
 		uiManager.showMainMenu();
-
-		/*       sf::Music backgroundMusic;
-			   if (!backgroundMusic.openFromFile("background_music.ogg")) {
-				   std::cerr << "Failed to load background music!" << std::endl;
-				   return -1;
-			   }
-			   backgroundMusic.setLooping(true);
-			   backgroundMusic.play();*/
 
 		uiManager.setRestartCallback([&]() {
 			isGameOver = false;
@@ -96,6 +86,7 @@ int main()
 			uiManager.updateScore(0);
 			});
 
+		// 游戏主循环
 		while (window.isOpen()) {
 			//std::optional包装的时间对象,返回值存储在evet常量中
 			//pollEvent用于检查并获取窗口的事件队列中的下一个事件
@@ -120,6 +111,7 @@ int main()
 				if (collected > 0) {
 					score += collected * 10;
 					/*scoreText.setString("Score: " + std::to_string(score));*/
+					uiManager.updateScore(score);
 					std::cout << "Collected " << collected << " gold! Score: " << score << std::endl;
 				}
 
@@ -139,7 +131,7 @@ int main()
 			goldManager.draw(window);
 			bear.draw(window);
 			obstacleManager.draw(window);
-			obstacleManager.drawDebug(window);
+			//obstacleManager.drawDebug(window);
 			uiManager.draw(window);
 			window.display();
 		}

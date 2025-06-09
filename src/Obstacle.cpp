@@ -10,13 +10,13 @@ Obstacle::Obstacle(sf::Texture& texture, float posX, float posY)
 	originalScale = { 1.0f, 1.0f };
 }
 
-void Obstacle::setCollisionBoundsPadding(float paddingX, float paddingY) {
-	sf::FloatRect bounds = sprite.getGlobalBounds();
-	collisionBounds = sf::FloatRect(
-		{ bounds.position.x + paddingX / 2.f,bounds.position.y + paddingY / 2.f },
-		{ bounds.size.x - paddingX,bounds.size.y - paddingY }
-	);
-}
+//void Obstacle::setCollisionBoundsPadding(float paddingX, float paddingY) {
+//	sf::FloatRect bounds = sprite.getGlobalBounds();
+//	collisionBounds = sf::FloatRect(
+//		{ bounds.position.x + paddingX / 2.f,bounds.position.y + paddingY / 2.f },
+//		{ bounds.size.x - paddingX,bounds.size.y - paddingY }
+//	);
+//}
 
 void Obstacle::update(float deltaTime, float speed) {
 	sprite.move({ -speed * deltaTime, 0 });
@@ -29,11 +29,9 @@ bool Obstacle::isOffScreen() const {
 }
 
 sf::FloatRect Obstacle::getBounds() const {
-	// 计算当前位置与初始位置的偏移
 	sf::Vector2f currentPos = sprite.getPosition();
 	sf::Vector2f offset = currentPos - initialPosition;
 
-	// 应用偏移到碰撞边界
 	sf::FloatRect bounds = collisionBounds;
 	bounds.position.x += offset.x;
 	bounds.position.y += offset.y;
@@ -48,22 +46,17 @@ void Obstacle::draw(sf::RenderWindow& window) {
 void Obstacle::initializePositionAndBounds(float posX, float posY) {
 	sprite.setScale(originalScale);
 
-	// 计算缩放后的高度
-	auto size = sprite.getTexture().getSize();
-	float scaledHeight = size.y * originalScale.y;
+	//auto size = sprite.getTexture().getSize();
+	//float scaledHeight = size.y * originalScale.y;
 
-	// 设置位置，确保障碍物底部精确对齐地面
-	sprite.setPosition({ posX, posY});
-
-	// 分析纹理像素数据，找出非透明区域的边界
+	sprite.setPosition({ posX, posY });
 	calculatePreciseCollisionBounds();
 }
 
-// 新增方法：分析纹理像素数据，计算精确碰撞边界
 void Obstacle::calculatePreciseCollisionBounds() {
 	// 简化碰撞边界计算，使用更保守的边界
 	sf::FloatRect bounds = sprite.getGlobalBounds();
-	float padding = 0.2f; // 20%的内边距，可以根据需要调整
+	float padding = 0.2f; // 缩小 20% 的边界
 
 	float paddingX = bounds.size.x * padding;
 	float paddingY = bounds.size.y * padding;
@@ -77,33 +70,33 @@ void Obstacle::calculatePreciseCollisionBounds() {
 	initialPosition = sprite.getPosition();
 }
 
-void Obstacle::drawDebug(sf::RenderWindow& window) {
-	// 绘制精灵边界
-	sf::RectangleShape spriteBound;
-	sf::FloatRect bounds = sprite.getGlobalBounds();
-	spriteBound.setPosition({ bounds.position.x, bounds.position.y });
-	spriteBound.setSize({ bounds.size.x, bounds.size.y });
-	spriteBound.setFillColor(sf::Color(0, 255, 0, 50)); // 半透明绿色
-	spriteBound.setOutlineColor(sf::Color::Green);
-	spriteBound.setOutlineThickness(1.0f);
-	window.draw(spriteBound);
-
-	// 绘制碰撞边界
-	sf::RectangleShape collisionBound;
-	sf::FloatRect cBounds = getBounds();
-	collisionBound.setPosition({ cBounds.position.x, cBounds.position.y });
-	collisionBound.setSize({ cBounds.size.x, cBounds.size.y });
-	collisionBound.setFillColor(sf::Color(255, 0, 0, 50)); // 半透明红色
-	collisionBound.setOutlineColor(sf::Color::Red);
-	collisionBound.setOutlineThickness(1.0f);
-	window.draw(collisionBound);
-}
-
-void ObstacleManager::drawDebug(sf::RenderWindow& window) {
-	for (const auto& obstacle : obstacles) {
-		obstacle->drawDebug(window);
-	}
-}
+//void Obstacle::drawDebug(sf::RenderWindow& window) {
+//	// 绘制精灵边界
+//	sf::RectangleShape spriteBound;
+//	sf::FloatRect bounds = sprite.getGlobalBounds();
+//	spriteBound.setPosition({ bounds.position.x, bounds.position.y });
+//	spriteBound.setSize({ bounds.size.x, bounds.size.y });
+//	spriteBound.setFillColor(sf::Color(0, 255, 0, 50)); // 半透明绿色
+//	spriteBound.setOutlineColor(sf::Color::Green);
+//	spriteBound.setOutlineThickness(1.0f);
+//	window.draw(spriteBound);
+//
+//	// 绘制碰撞边界
+//	sf::RectangleShape collisionBound;
+//	sf::FloatRect cBounds = getBounds();
+//	collisionBound.setPosition({ cBounds.position.x, cBounds.position.y });
+//	collisionBound.setSize({ cBounds.size.x, cBounds.size.y });
+//	collisionBound.setFillColor(sf::Color(255, 0, 0, 50)); // 半透明红色
+//	collisionBound.setOutlineColor(sf::Color::Red);
+//	collisionBound.setOutlineThickness(1.0f);
+//	window.draw(collisionBound);
+//}
+//
+//void ObstacleManager::drawDebug(sf::RenderWindow& window) {
+//	for (const auto& obstacle : obstacles) {
+//		obstacle->drawDebug(window);
+//	}
+//}
 
 
 // ============ SmallBlock ============
@@ -196,19 +189,19 @@ ObstacleManager::ObstacleManager()
 
 bool ObstacleManager::loadTextures() {
 	if (!smallBlockTexture.loadFromFile("smallBlock.png")) {
-		std::cerr << "" << std::endl;
+		std::cerr << "Failed to load smallBlock.png" << std::endl;
 		return false;
 	}
 	if (!bigBlockTexture.loadFromFile("bigBlock.png")) {
-		std::cerr << "" << std::endl;
+		std::cerr << "Failed to load bigBlock.png" << std::endl;
 		return false;
 	}
 	if (!longBlockTexture.loadFromFile("longBlock.png")) {
-		std::cerr << " " << std::endl;
+		std::cerr << "Failed to load longBlock.png" << std::endl;
 		return false;
 	}
 	if (!balloonTexture.loadFromFile("balloon.png")) {
-		std::cerr << "" << std::endl;
+		std::cerr << "Failed to load balloon.png" << std::endl;
 		return false;
 	}
 	return true;
@@ -234,7 +227,6 @@ void ObstacleManager::update(float deltaTime, float speed) {
 		obstacles.end()
 	);
 }
-
 
 void ObstacleManager::spawnObstacle(float groundY) {
 	int type = getRandomObstacleType();
@@ -265,14 +257,6 @@ int ObstacleManager::getRandomObstacleType() const {
 	return Tool::getRandomInt(0, 3);
 }
 
-//bool ObstacleManager::checkCollision(const sf::FloatRect& playerBounds) {
-//	for (const auto& obstacle : obstacles) {
-//		if (Tool::checkCollision(obstacle, obstaz) {
-//			return true;
-//		}
-//	}
-//	return false;
-//}
 bool ObstacleManager::checkCollision(const sf::Sprite& playerSprite)
 {
 	for (const auto& obstacle : obstacles) {
@@ -282,7 +266,6 @@ bool ObstacleManager::checkCollision(const sf::Sprite& playerSprite)
 	}
 	return false;
 }
-
 
 void ObstacleManager::draw(sf::RenderWindow& window) {
 	for (const auto& obstacle : obstacles) {
@@ -304,10 +287,11 @@ float ObstacleManager::getRandomSpawnTime() const {
 }
 
 void ObstacleManager::increaseDifficulty(float gameTime) {
-	minSpawnTime = std::max(0.5f, 1.0f - gameTime / 60.0f);
-	maxSpawnTime = std::max(1.5f, 3.0f - gameTime / 30.0f);
-	minObstacleDistance = std::max(150.0f, 300.0f - gameTime / 2.0f);
+	minSpawnTime = std::max(0.3f, 1.0f - 0.1f * (gameTime / 30));
+	maxSpawnTime = std::max(1.0f, 3.0f - 0.2f * (gameTime / 30));
+	minObstacleDistance = std::max(150.0f, 300.0f - 10.0f * (gameTime / 10));
 }
+
 const sf::Sprite& Obstacle::getSprite() const {
-	return sprite;  // �����ϰ���� Sprite
+	return sprite;
 }

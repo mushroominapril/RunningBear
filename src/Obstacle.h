@@ -9,13 +9,12 @@ public:
 	virtual ~Obstacle() = default;
 	const sf::Sprite& getSprite() const;
 
-	virtual void update(float deltaTime, float speed); // 更新障碍物的位置
-	virtual bool isOffScreen() const; // 检查障碍物是否已经移出屏幕
-	virtual sf::FloatRect getBounds() const; // 获取障碍物的碰撞边界
-	virtual void draw(sf::RenderWindow& window); // 绘制障碍物
-	void setCollisionBoundsPadding(float paddingX, float paddingY);
-
-	void drawDebug(sf::RenderWindow& window);
+	void update(float deltaTime, float speed); // 更新障碍物的位置
+	bool isOffScreen() const; // 检查障碍物是否已经移出屏幕
+	sf::FloatRect getBounds() const; // 获取障碍物的碰撞边界
+	void draw(sf::RenderWindow& window); // 绘制障碍物
+	//void setCollisionBoundsPadding(float paddingX, float paddingY);
+	//void drawDebug(sf::RenderWindow& window);
 protected:
 
 	virtual void updateAnimation(float deltaTime) = 0; // 更新动画效果
@@ -77,7 +76,7 @@ public:
 	void reset(); // 重置障碍物系统
 	void increaseDifficulty(float gameTime); // 难度调整
 
-	void drawDebug(sf::RenderWindow& window);
+	//void drawDebug(sf::RenderWindow& window);
 private:
 
 	void spawnObstacle(float groundY);

@@ -1,7 +1,6 @@
 #include "UI.h"
 #include <iostream>
 
-// UI.cpp
 UILabel::UILabel(const sf::Font& font, const std::string& text, unsigned int size, sf::Vector2f position)
 	: m_text(font) {
 	m_text.setString(text);
@@ -38,7 +37,7 @@ UIButton::UIButton(const sf::Font& font, const std::string& text, unsigned int s
 	m_text.setOrigin({
 		textRect.position.x + textRect.size.x / 2.f,
 		textRect.position.y + textRect.size.y / 2.f
-	});
+	}); // 设置居中锚点
 	m_text.setPosition(position + sizeRect / 2.f);
 }
 
@@ -51,6 +50,7 @@ void UIButton::handleEvent(const sf::Event& event, const sf::RenderWindow& windo
 		if (mousePress->button == sf::Mouse::Button::Left) {
 			sf::Vector2f mousePos = window.mapPixelToCoords(
 				{ mousePress->position.x, mousePress->position.y });
+			// 书包坐标转化为世界坐标
 			if (m_background.getGlobalBounds().contains(mousePos) && m_callback) {
 				m_callback();
 			}
@@ -86,20 +86,15 @@ UIManager::UIManager(const sf::Font& font, const std::vector<sf::Texture>& frame
 	m_isGameOver(false),
 	m_isInMainMenu(true)
 {
-	// ���ö����Ƿ���سɹ�
 	m_animationLoaded = !frames.empty();
-
-	// ���ö���Sprite��λ�ã�����ȫ���ڣ�
 	m_menuSprite.setPosition({ 0.f, 0.f });
 
-	// ���� UI Ԫ��λ��ʹ�����
-	const float centerX = 400.f; // ���ڿ�ȵ�һ�룬����Ĵ��ڳߴ����
+	const float centerX = 400.f;
 
 	m_titleLabel.setPosition({ centerX - 200.f, 80.f });
 	m_startButton.setPosition({ centerX - 100.f, 300.f });
 	m_exitButton.setPosition({ centerX - 100.f, 380.f });
 
-	// ���ð�ť�ص�
 	m_restartButton.setCallback([this]() {
 		if (m_isGameOver && m_callback) {
 			m_callback();
@@ -148,20 +143,18 @@ void UIManager::setExitCallback(std::function<void()> callback) {
 void UIManager::draw(sf::RenderWindow& window) {
 	if (m_isInMainMenu) {
 		if (m_animationLoaded) {
-			// ��ȡ���ں�����ߴ�
 			sf::Vector2u windowSize = window.getSize();
 			sf::Vector2u textureSize = m_menuFrames[m_currentFrame].getSize();
 
 			float scaleX = static_cast<float>(windowSize.x) / textureSize.x;
 			float scaleY = static_cast<float>(windowSize.y) / textureSize.y;
 
-			m_menuSprite.setScale({ scaleX, scaleY }); // ���ű���ͼ
-			m_menuSprite.setPosition({ 0.f, 0.f });    // ȷ�����ϽǶ��봰��
+			m_menuSprite.setScale({ scaleX, scaleY }); 
+			m_menuSprite.setPosition({ 0.f, 0.f });    
 
 			window.draw(m_menuSprite);
 		}
-		// SFML ���Զ�������Ƶ֡������
-		// ֻ�����UIԪ��
+
 		m_titleLabel.draw(window);
 		m_startButton.draw(window);
 		m_exitButton.draw(window);
